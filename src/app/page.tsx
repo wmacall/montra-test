@@ -9,6 +9,7 @@ export default function Home() {
   const { push } = useRouter();
 
   const handleNavigateToSignIn = () => push("/sign-in");
+  const handleClickSubmit = () => push("/dashboard");
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
@@ -19,6 +20,7 @@ export default function Home() {
         password={password}
         setPassword={setPassword}
         onPressNavigate={handleNavigateToSignIn}
+        onPressSubmit={handleClickSubmit}
       />
     </div>
   );
