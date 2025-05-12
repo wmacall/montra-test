@@ -1,5 +1,5 @@
-import { MoreHorizontal, FileText } from "lucide-react";
 import { FC } from "react";
+import { MoreHorizontal, FileText } from "lucide-react";
 
 interface ProjectRowProps {
   title?: string;
