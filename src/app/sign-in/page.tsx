@@ -1,24 +1,22 @@
 "use client";
 import { useState } from "react";
-import AuthForm from "@/components/AuthForm";
 import { useRouter } from "next/navigation";
+import AuthForm from "@/components/AuthForm";
 
-export default function Home() {
+export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { push } = useRouter();
-
-  const handleNavigateToSignIn = () => push("/sign-in");
+  const { back } = useRouter();
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
       <AuthForm
-        isSignIn={false}
+        isSignIn
         email={email}
         setEmail={setEmail}
         password={password}
         setPassword={setPassword}
-        onPressNavigate={handleNavigateToSignIn}
+        onPressNavigate={back}
       />
     </div>
   );

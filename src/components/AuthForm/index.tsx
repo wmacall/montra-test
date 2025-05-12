@@ -17,6 +17,8 @@ interface AuthFormProps {
   setEmail: (email: string) => void;
   password: string;
   setPassword: (password: string) => void;
+  onPressNavigate?: () => void;
+  onPressSubmit?: () => void;
 }
 
 export default function AuthForm({
@@ -25,6 +27,8 @@ export default function AuthForm({
   setEmail,
   password,
   setPassword,
+  onPressNavigate,
+  onPressSubmit,
 }: AuthFormProps) {
   return (
     <Card className="w-full max-w-md shadow-sm p-6">
@@ -55,11 +59,12 @@ export default function AuthForm({
           />
         </div>
         {isSignIn && (
-          <h1 className="text-right py-1.5 font-medium mt-1.5 hover:underline cursor-pointer">
+          <h1 className="text-right text-sm py-1.5 font-medium mt-1.5 hover:underline cursor-pointer">
             Forgot Password
           </h1>
         )}
         <Button
+          onClick={onPressSubmit}
           className={cn(
             "w-full bg-blue-500 hover:bg-blue-600 cursor-pointer",
             isSignIn ? "mt-3" : "mt-6"
@@ -71,7 +76,11 @@ export default function AuthForm({
           <h1 className="text-gray-600">
             {isSignIn ? "Don't have an account?" : "Already have an account?"}
           </h1>
-          <Button variant="link" className="font-semibold cursor-pointer p-0">
+          <Button
+            variant="link"
+            className="font-semibold cursor-pointer p-0"
+            onClick={onPressNavigate}
+          >
             {isSignIn ? "Sign Up" : "Sign In"}
           </Button>
         </div>

@@ -37,7 +37,7 @@ export default function FormInput({
   return (
     <div className="relative">
       {leftIcon && (
-        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400">
+        <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none text-gray-400 shadow-none">
           {leftIcon}
         </div>
       )}
@@ -45,7 +45,7 @@ export default function FormInput({
         name={name}
         type={isPassword && showPassword ? "text" : type}
         placeholder={placeholder}
-        className="pl-10 ring-0 focus:ring-0 focus-visible:ring-0"
+        className="pl-10 ring-0 focus:ring-0 focus-visible:ring-0 bg-gray-100/50"
         value={value}
         onChange={handleChangeValue}
       />
