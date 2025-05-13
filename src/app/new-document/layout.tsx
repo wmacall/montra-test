@@ -41,7 +41,7 @@ export default function NewDocumentLayout({
           </Button>
         </div>
       </div>
-      <div className="flex-1 bg-white">{children}</div>
+      <div className="bg-white flex flex-1">{children}</div>
     </div>
   );
 }

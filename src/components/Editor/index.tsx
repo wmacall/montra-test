@@ -14,6 +14,8 @@ import Paragraph from "@tiptap/extension-paragraph";
 import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
+import Placeholder from "@tiptap/extension-placeholder";
+
 import {
   Bold,
   Italic,
@@ -29,6 +31,8 @@ import {
   AlignRight,
   Quote,
   Type,
+  X,
+  Mic,
 } from "lucide-react";
 
 const toolbarButtons: {
@@ -127,6 +131,9 @@ export const Editor = () => {
       BulletList,
       OrderedList,
       ListItem,
+      Placeholder.configure({
+        placeholder: "Start typing here...",
+      }),
       Heading.configure({
         levels: [1, 2, 3],
       }),
@@ -137,21 +144,34 @@ export const Editor = () => {
   if (!editor) return null;
 
   return (
-    <div>
-      <div className="flex flex-col items-center justify-center">
-        <div className="flex w-full justify-center gap-1 items-center py-1.5 border-b border-gray-300/50 bg-white">
-          {toolbarButtons.map((button, index) => (
-            <div
-              key={index}
-              onClick={() => button.action(editor)}
-              className="bg-white h-[28px] w-[28px] flex items-center justify-center cursor-pointer hover:bg-gray-100"
-            >
-              {button.icon}
-            </div>
-          ))}
+    <div className="flex flex-1">
+      <div className="flex flex-col w-full flex-1">
+        <div className="flex flex-col">
+          <div className="flex w-full justify-center gap-1 items-center border-b border-gray-300/50 bg-white h-10">
+            {toolbarButtons.map((button, index) => (
+              <div
+                key={index}
+                onClick={() => button.action(editor)}
+                className="bg-white h-[28px] w-[28px] flex items-center justify-center cursor-pointer hover:bg-gray-100"
+              >
+                {button.icon}
+              </div>
+            ))}
+          </div>
+        </div>
+        <EditorContent className="py-16 px-6" editor={editor} />
+      </div>
+      <div className="flex flex-col border-b border-l border-gray-300/50 bg-white w-[268px]">
+        <div className="flex flex-row h-10 border-b border-l border-gray-300/50 bg-white items-center justify-between px-3">
+          <p className="text-black font-medium">New Draft</p>
+          <X size={18} color="#707070" />
         </div>
       </div>
-      <EditorContent className="mx-6" editor={editor} />
+      <div className="flex flex-col bg-gray-100 p-2 border-b border-l border-gray-300/50">
+        <div className="h-8 w-8 rounded-sm bg-neutral-200 items-center justify-center flex">
+          <Mic size={20} color="#505050" />
+        </div>
+      </div>
     </div>
   );
 };

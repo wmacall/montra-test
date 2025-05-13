@@ -178,3 +178,22 @@ ol {
     margin-bottom: 0.25em;
   }
 }
+
+.ProseMirror-focused {
+  background-color: white;
+  border: none;
+  outline: none;
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  color: #adb5bd;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  font-size: 36px;
+  color: #303030;
+  opacity: 0.5;
+  font-weight: 500;
+  font-family: "Inter", sans-serif;
+}
