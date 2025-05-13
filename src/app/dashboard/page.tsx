@@ -1,16 +1,16 @@
 "use client";
+import { useEffect, useState, useCallback } from "react";
 import { ProjectRow } from "@/components/ProjectRow";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/context/SessionContext";
 import { useUserTranscripts } from "@/hooks/useUserTranscripts";
-import { groupTranscriptions } from "@/lib/groupTranscriptions";
-import { GroupedTranscriptions } from "@/types";
-import { ListFilterIcon, Plus } from "lucide-react";
+import {
+  groupTranscriptions,
+  sortTranscriptions,
+} from "@/lib/groupTranscriptions";
+import { GroupedTranscriptions, SortDirection, SortField } from "@/types";
+import { ChevronsUpDown, ListFilterIcon, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-
-type SortDirection = "asc" | "desc";
-type SortField = "created_at" | "updated_at";
 
 export default function Dashboard() {
   const { push } = useRouter();
@@ -22,9 +22,17 @@ export default function Dashboard() {
 
   const handleNewProject = () => push("/new-document");
 
-  const handleGetUserTranscriptions = async () => {
+  const handleGetUserTranscriptions = useCallback(async () => {
     const data = await onGetUserTranscripts();
     setTranscripts(groupTranscriptions(data));
+  }, [onGetUserTranscripts]);
+
+  const handleSortTranscriptions = (field: SortField) => {
+    const newDirection =
+      sortField === field && sortDirection === "asc" ? "desc" : "asc";
+    setSortDirection(newDirection);
+    setSortField(field);
+    setTranscripts((prev) => sortTranscriptions(prev, field, newDirection));
   };
 
   useEffect(() => {
@@ -60,15 +68,23 @@ export default function Dashboard() {
           <div className="flex items-center justify-start flex-1">
             <span className="text-gray-500 text-sm font-medium">Templates</span>
           </div>
-          <div className="flex items-center flex-1 justify-center cursor-pointer">
+          <div
+            className="flex items-center flex-1 justify-center cursor-pointer flex-row gap-2"
+            onClick={() => handleSortTranscriptions("created_at")}
+          >
             <span className="text-gray-500 text-sm font-medium">
               Creation Date
             </span>
+            <ChevronsUpDown size={14} className="text-gray-700" />
           </div>
-          <div className="flex items-center flex-1 justify-center cursor-pointer">
+          <div
+            className="flex items-center flex-1 justify-center cursor-pointer flex-row gap-2"
+            onClick={() => handleSortTranscriptions("updated_at")}
+          >
             <span className="text-gray-500 text-sm font-medium">
               Latest edited
             </span>
+            <ChevronsUpDown size={14} className="text-gray-700" />
           </div>
           <div className="flex items-center flex-[0.5] justify-end" />
         </div>

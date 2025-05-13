@@ -12,3 +12,6 @@ export interface GroupedTranscriptions {
   title: string;
   data: TranscriptionResponse[];
 }
+
+export type SortDirection = "asc" | "desc";
+export type SortField = "created_at" | "updated_at";
