@@ -24,6 +24,8 @@ export const VoiceRecorder = () => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioUrlRef = useRef<string | null>(null);
+  const [canGenerateTranscription, setCanGenerateTranscription] =
+    useState(true);
 
   useEffect(() => {
     if (!waveformRef.current) return;
@@ -160,9 +162,23 @@ export const VoiceRecorder = () => {
     }
   };
 
-  const handleGenerateTranscription = () => {
-    if (!audioUrlRef.current) return;
-    console.log("Blob:", audioUrlRef.current);
+  const handleGenerateTranscription = async () => {
+    try {
+      if (!audioUrlRef.current) return;
+      const response = await fetch(audioUrlRef.current);
+      const blob = await response.blob();
+      const formData = new FormData();
+      formData.append("audio", blob, "recording.webm");
+      const transcriptionResponse = await fetch("/api/transcribe", {
+        method: "POST",
+        body: formData,
+      });
+      const transcriptionData = await transcriptionResponse.json();
+      console.log("Blob:", transcriptionData.transcript);
+      setCanGenerateTranscription(false);
+    } catch (error) {
+      console.log("Error generating transcription:", error);
+    }
   };
 
   const resetRecorder = () => {
@@ -244,7 +260,8 @@ export const VoiceRecorder = () => {
             Stop
           </Button>
         ) : null}
-        {recordingState === RecordingState.STOPPED ? (
+        {recordingState === RecordingState.STOPPED &&
+        canGenerateTranscription ? (
           <Button
             onClick={handleGenerateTranscription}
             className="relative flex-1"
