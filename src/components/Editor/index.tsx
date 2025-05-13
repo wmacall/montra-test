@@ -15,7 +15,7 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import Placeholder from "@tiptap/extension-placeholder";
-
+import { VoiceRecorder } from "../VoiceRecorder";
 import {
   Bold,
   Italic,
@@ -166,6 +166,7 @@ export const Editor = () => {
           <p className="text-black font-medium">New Draft</p>
           <X size={18} color="#707070" />
         </div>
+        <VoiceRecorder />
       </div>
       <div className="flex flex-col bg-gray-100 p-2 border-b border-l border-gray-300/50">
         <div className="h-8 w-8 rounded-sm bg-neutral-200 items-center justify-center flex">
