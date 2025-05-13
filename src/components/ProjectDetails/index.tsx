@@ -1,11 +1,17 @@
 "use client";
 
+import { useSession } from "@/context/SessionContext";
 import { useTranscription } from "@/context/TranscriptionContext";
+import { format } from "date-fns";
 
 export const ProjectDetails = () => {
-  const { transcription } = useTranscription();
-  const lastEdited = "2023-10-01 12:00 PM";
-  const createdBy = "John Doe";
+  const { transcription, createdAt } = useTranscription();
+  const { session } = useSession();
+  const email = session?.user?.email || null;
+
+  const formattedDate = createdAt
+    ? format(new Date(createdAt), "MMMM d, yyyy")
+    : "Unknown date";
 
   if (!transcription) {
     return null;
@@ -17,11 +23,15 @@ export const ProjectDetails = () => {
       <div className="w-full rounded-md relative flex flex-col bg-neutral-50 p-3 gap-3">
         <div>
           <p className="text-gray-700">Latest edited</p>
-          <p className="text-black font-medium text-md">{lastEdited}</p>
+          <p className="text-black font-medium text-md">{formattedDate}</p>
         </div>
         <div>
           <p className="text-gray-700">Created by</p>
-          <p className="text-black font-medium text-md">{createdBy}</p>
+          <p className="text-black font-medium text-md">
+            {email
+              ? email.split("@")[0].charAt(0) + email.split("@")[0].slice(1)
+              : "User"}
+          </p>
         </div>
       </div>
     </div>

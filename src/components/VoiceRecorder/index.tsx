@@ -6,6 +6,10 @@ import WaveSurfer from "wavesurfer.js";
 import RecordPlugin from "wavesurfer.js/dist/plugins/record";
 import { Button } from "@/components/ui/button";
 import { Mic, Play, RefreshCcw, StopCircle, PauseCircle } from "lucide-react";
+import { supabase } from "@/db/supabase";
+import { useSession } from "@/context/SessionContext";
+import { toast } from "sonner";
+import { useTranscription } from "@/context/TranscriptionContext";
 
 enum RecordingState {
   IDLE = "idle",
@@ -26,6 +30,8 @@ export const VoiceRecorder = () => {
   const audioUrlRef = useRef<string | null>(null);
   const [canGenerateTranscription, setCanGenerateTranscription] =
     useState(true);
+  const { session } = useSession();
+  const { setTranscription, onSetTranscriptionData } = useTranscription();
 
   useEffect(() => {
     if (!waveformRef.current) return;
@@ -174,8 +180,29 @@ export const VoiceRecorder = () => {
         body: formData,
       });
       const transcriptionData = await transcriptionResponse.json();
-      console.log("Blob:", transcriptionData.transcript);
-      setCanGenerateTranscription(false);
+      const transcription = transcriptionData.transcript;
+      const { data, error } = await supabase
+        .from("transcripts")
+        .insert([
+          {
+            user_id: session?.user?.id,
+            raw_text: transcriptionData.transcript,
+            title:
+              transcription.length > 20
+                ? transcription.slice(0, 20)
+                : transcription,
+          },
+        ])
+        .select();
+      if (data) {
+        setTranscription(transcription);
+        onSetTranscriptionData(data[0]);
+        toast.success("Transcription saved successfully");
+        setCanGenerateTranscription(false);
+      }
+      if (error) {
+        toast.error("Error saving transcription");
+      }
     } catch (error) {
       console.log("Error generating transcription:", error);
     }
