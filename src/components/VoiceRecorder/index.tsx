@@ -16,7 +16,7 @@ enum RecordingState {
 
 export const VoiceRecorder = () => {
   const [recordingState, setRecordingState] = useState<RecordingState>(
-    RecordingState.RECORDING
+    RecordingState.IDLE
   );
   const waveformRef = useRef<HTMLDivElement>(null);
   const wavesurferRef = useRef<WaveSurfer | null>(null);
@@ -199,7 +199,7 @@ export const VoiceRecorder = () => {
   };
 
   return (
-    <div className="px-3 py-4 flex flex-col gap-2">
+    <div className="px-3 py-4 flex flex-col gap-2 border-b border-gray-300/50 bg-white">
       <div className="text-gray-500">Click to start recording a voice memo</div>
       <div
         ref={waveformRef}

@@ -16,6 +16,8 @@ import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import Placeholder from "@tiptap/extension-placeholder";
 import { VoiceRecorder } from "../VoiceRecorder";
+import { Transcript } from "../Transcript";
+import { ProjectDetails } from "../ProjectDetails";
 import {
   Bold,
   Italic,
@@ -34,6 +36,7 @@ import {
   X,
   Mic,
 } from "lucide-react";
+import { useTranscription } from "@/context/TranscriptionContext";
 
 const toolbarButtons: {
   icon: ReactNode;
@@ -117,6 +120,7 @@ const toolbarButtons: {
 ];
 
 export const Editor = () => {
+  const { transcription } = useTranscription();
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -163,10 +167,14 @@ export const Editor = () => {
       </div>
       <div className="flex flex-col border-b border-l border-gray-300/50 bg-white w-[268px]">
         <div className="flex flex-row h-10 border-b border-l border-gray-300/50 bg-white items-center justify-between px-3">
-          <p className="text-black font-medium">New Draft</p>
+          <p className="text-black font-medium">
+            {transcription.length > 0 ? "Input" : "New Draft"}
+          </p>
           <X size={18} color="#707070" />
         </div>
         <VoiceRecorder />
+        <Transcript />
+        <ProjectDetails />
       </div>
       <div className="flex flex-col bg-gray-100 p-2 border-b border-l border-gray-300/50">
         <div className="h-8 w-8 rounded-sm bg-neutral-200 items-center justify-center flex">
