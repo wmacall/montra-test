@@ -59,9 +59,9 @@ export default function AuthForm({
           />
         </div>
         {isSignIn && (
-          <h1 className="text-right text-sm py-1.5 font-medium mt-1.5 hover:underline cursor-pointer">
+          <p className="text-right text-sm py-1.5 font-medium mt-1.5 hover:underline cursor-pointer">
             Forgot Password
-          </h1>
+          </p>
         )}
         <Button
           onClick={onPressSubmit}
@@ -73,9 +73,9 @@ export default function AuthForm({
           {isSignIn ? "Sign In" : "Sign Up"}
         </Button>
         <div className="flex items-center gap-2 justify-center pt-6">
-          <h1 className="text-gray-600">
+          <p className="text-gray-600">
             {isSignIn ? "Don't have an account?" : "Already have an account?"}
-          </h1>
+          </p>
           <Button
             variant="link"
             className="font-semibold cursor-pointer p-0"

@@ -2,6 +2,8 @@
 import { useState } from "react";
 import AuthForm from "@/components/AuthForm";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/db/supabase";
+import { toast } from "sonner";
 
 export default function Home() {
   const [email, setEmail] = useState("");
@@ -9,7 +11,21 @@ export default function Home() {
   const { push } = useRouter();
 
   const handleNavigateToSignIn = () => push("/sign-in");
-  const handleClickSubmit = () => push("/dashboard");
+
+  const handlePressSubmit = async () => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+      if (error) {
+        toast.error(error.message);
+        return;
+      }
+    } catch {
+      console.log("Error in sign in");
+    }
+  };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-white">
@@ -20,7 +36,7 @@ export default function Home() {
         password={password}
         setPassword={setPassword}
         onPressNavigate={handleNavigateToSignIn}
-        onPressSubmit={handleClickSubmit}
+        onPressSubmit={handlePressSubmit}
       />
     </div>
   );
