@@ -15,12 +15,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <Avatar className="h-6 w-6 bg-teal-300 rounded-sm items-center justify-center">
             <AvatarFallback>C</AvatarFallback>
           </Avatar>
-          <h1 className="font-medium text-lg">Campbell Baron</h1>
+          <p className="font-medium text-lg">Campbell Baron</p>
         </div>
         <div className="flex flex-col flex-1 justify-between px-3 pt-3.5">
           <div className="flex flex-row items-center p-2 bg-gray-100 rounded-sm gap-2">
             <ChartNoAxesGantt color="#505050" />
-            <h1 className="font-medium">Projects</h1>
+            <p className="font-medium">Projects</p>
           </div>
           <div className="flex flex-row items-center gap-2 p-2 mb-3">
             <LogOut size={16} color="#505050" />
@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="flex-1 bg-white flex flex-col">
         <div className="h-14 flex items-center border-b border-gray-300 px-4 gap-1.5">
           <ChartNoAxesGantt color="#505050" />
-          <h1 className="font-medium">Projects</h1>
+          <p className="font-medium">Projects</p>
         </div>
         <div>{children}</div>
       </div>
