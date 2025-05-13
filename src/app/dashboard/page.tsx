@@ -14,9 +14,9 @@ export default function Dashboard() {
       <div className="flex py-3.5 px-4 justify-between">
         <div className="flex items-center gap-2 bg-gray-50 h-[28-px] rounded-md px-2 cursor-pointer">
           <ListFilterIcon size={16} color="#505050" />
-          <h1 className="text-sm text-gray-700 font-medium">
+          <p className="text-sm text-gray-700 font-medium">
             Sorted by <span className="text-black">Latest Edited</span>
-          </h1>
+          </p>
         </div>
         <Button
           onClick={handleNewProject}
@@ -27,14 +27,14 @@ export default function Dashboard() {
         </Button>
       </div>
       <div className="bg-neutral-50 w-full px-4 py-[5.5px]">
-        <h1 className="text-sm font-bold text-neutral-700">Today</h1>
+        <p className="text-sm font-bold text-neutral-700">Today</p>
       </div>
       <ProjectRow
         title="Leveraging Technology for Efficient Communication"
         date="March 25, 2024"
       />
       <div className="bg-neutral-50 w-full px-4 py-[5.5px]">
-        <h1 className="text-sm font-bold text-neutral-700">Yesterday</h1>
+        <p className="text-sm font-bold text-neutral-700">Yesterday</p>
       </div>
       <ProjectRow title="The Investor Spectrum" date="March 25, 2024" />
       <ProjectRow
