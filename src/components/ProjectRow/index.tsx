@@ -1,12 +1,18 @@
 import { FC } from "react";
 import { MoreHorizontal, FileText } from "lucide-react";
+import { formatDateMMMMD } from "@/lib/formatDateMMMMD";
 
 interface ProjectRowProps {
   title?: string;
-  date?: string;
+  created_at?: string;
+  updated_at: string | null;
 }
 
-export const ProjectRow: FC<ProjectRowProps> = ({ title = "", date = "" }) => {
+export const ProjectRow: FC<ProjectRowProps> = ({
+  title = "",
+  created_at = "",
+  updated_at = "",
+}) => {
   return (
     <div className="w-full border-b border-gray-300/30 cursor-pointer p-1">
       <div className="flex items-center justify-between w-full  hover:bg-neutral-50 p-3 rounded-xl transition-all duration-300 ease-in-out">
@@ -25,10 +31,12 @@ export const ProjectRow: FC<ProjectRowProps> = ({ title = "", date = "" }) => {
           </div>
         </div>
         <div className="flex items-center flex-1 justify-end">
-          <span className="text-gray-500">{date}</span>
+          <span className="text-gray-500">{formatDateMMMMD(created_at)}</span>
         </div>
         <div className="flex items-center flex-1 justify-end">
-          <span className="text-gray-500">{date}</span>
+          <span className="text-gray-500">
+            {formatDateMMMMD(updated_at ? updated_at : created_at)}
+          </span>
         </div>
         <div className="flex items-center flex-[0.5] justify-end">
           <MoreHorizontal className="w-5 h-5 text-gray-500" />

@@ -2,16 +2,12 @@
 
 import { useSession } from "@/context/SessionContext";
 import { useTranscription } from "@/context/TranscriptionContext";
-import { format } from "date-fns";
+import { formatDateMMMMD } from "@/lib/formatDateMMMMD";
 
 export const ProjectDetails = () => {
   const { transcription, createdAt } = useTranscription();
   const { session } = useSession();
   const email = session?.user?.email || null;
-
-  const formattedDate = createdAt
-    ? format(new Date(createdAt), "MMMM d, yyyy")
-    : "Unknown date";
 
   if (!transcription) {
     return null;
@@ -23,7 +19,9 @@ export const ProjectDetails = () => {
       <div className="w-full rounded-md relative flex flex-col bg-neutral-50 p-3 gap-3">
         <div>
           <p className="text-gray-700">Latest edited</p>
-          <p className="text-black font-medium text-md">{formattedDate}</p>
+          <p className="text-black font-medium text-md">
+            {formatDateMMMMD(createdAt)}
+          </p>
         </div>
         <div>
           <p className="text-gray-700">Created by</p>
