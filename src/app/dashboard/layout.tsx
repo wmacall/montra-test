@@ -4,6 +4,7 @@ import { useSession } from "@/context/SessionContext";
 import { supabase } from "@/db/supabase";
 import { AvatarFallback } from "@radix-ui/react-avatar";
 import { ChartNoAxesGantt, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { toast } from "sonner";
 
@@ -13,12 +14,16 @@ interface DashboardLayoutProps {
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const { session } = useSession();
+  const { replace } = useRouter();
 
   const handleSignOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) {
-      toast.error("Failed to sign out");
+      return toast.error("Failed to sign out");
     }
+    document.cookie =
+      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    replace("/");
   };
 
   return (

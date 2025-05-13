@@ -8,11 +8,11 @@ import { toast } from "sonner";
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { back } = useRouter();
+  const { back, replace } = useRouter();
 
   const handlePressSubmit = async () => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
@@ -20,6 +20,8 @@ export default function SignIn() {
         toast.error(error.message);
         return;
       }
+      document.cookie = `access_token=${data.session?.access_token}; path=/;`;
+      replace("/dashboard");
     } catch {
       console.log("Error in sign in");
     }
