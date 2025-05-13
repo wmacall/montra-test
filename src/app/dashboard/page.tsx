@@ -9,11 +9,16 @@ import { ListFilterIcon, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+type SortDirection = "asc" | "desc";
+type SortField = "created_at" | "updated_at";
+
 export default function Dashboard() {
   const { push } = useRouter();
   const { onGetUserTranscripts } = useUserTranscripts();
   const { session } = useSession();
   const [transcripts, setTranscripts] = useState<GroupedTranscriptions[]>([]);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [sortField, setSortField] = useState<SortField>("created_at");
 
   const handleNewProject = () => push("/new-document");
 
@@ -28,11 +33,9 @@ export default function Dashboard() {
     }
   }, [session]);
 
-  console.log(transcripts);
-
   return (
     <div className="flex flex-col justify-center w-full">
-      <div className="flex py-3.5 px-4 justify-between">
+      <div className="flex py-3.5 px-4 justify-between border-b border-gray-300/30">
         <div className="flex items-center gap-2 bg-gray-50 h-[28-px] rounded-md px-2 cursor-pointer">
           <ListFilterIcon size={16} color="#505050" />
           <p className="text-sm text-gray-700 font-medium">
@@ -46,6 +49,29 @@ export default function Dashboard() {
           <Plus size={16} color="#ffffff" />
           <span className="text-sm font-bold">New Project</span>
         </Button>
+      </div>
+      <div className="w-full border-b border-gray-300/30 px-6 py-1.5">
+        <div className="flex items-center justify-between w-full gap-2">
+          <div className="flex items-center gap-2 flex-4">
+            <span className="text-gray-500 text-sm font-medium">
+              Project name
+            </span>
+          </div>
+          <div className="flex items-center justify-start flex-1">
+            <span className="text-gray-500 text-sm font-medium">Templates</span>
+          </div>
+          <div className="flex items-center flex-1 justify-center cursor-pointer">
+            <span className="text-gray-500 text-sm font-medium">
+              Creation Date
+            </span>
+          </div>
+          <div className="flex items-center flex-1 justify-center cursor-pointer">
+            <span className="text-gray-500 text-sm font-medium">
+              Latest edited
+            </span>
+          </div>
+          <div className="flex items-center flex-[0.5] justify-end" />
+        </div>
       </div>
       {transcripts.map((transcription) => (
         <div key={transcription.title}>
