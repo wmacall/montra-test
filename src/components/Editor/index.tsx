@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { useEditor, EditorContent, Editor as EditorType } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -37,6 +37,8 @@ import {
   Mic,
 } from "lucide-react";
 import { useTranscription } from "@/context/TranscriptionContext";
+import { supabase } from "@/db/supabase";
+import { useSession } from "@/context/SessionContext";
 
 const toolbarButtons: {
   icon: ReactNode;
@@ -120,18 +122,19 @@ const toolbarButtons: {
 ];
 
 export const Editor = () => {
-  const { transcription, summary } = useTranscription();
+  const { transcription, summary, transcriptionId, onSetTranscriptionData } =
+    useTranscription();
   const editor = useEditor({
     extensions: [
       StarterKit,
       Document,
       Paragraph,
+      Text,
       Underline,
       Link,
       Blockquote,
       Strike,
       TextAlign,
-      Text,
       BulletList,
       OrderedList,
       ListItem,
@@ -144,6 +147,68 @@ export const Editor = () => {
     ],
     content: "",
   });
+
+  const { session } = useSession();
+  const isSaving = useRef(false);
+  const saveTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (!editor) return;
+
+    const handleSave = async () => {
+      if (isSaving.current || !editor) return;
+      isSaving.current = true;
+
+      const content = editor.getHTML();
+      const json = editor.getJSON();
+      const firstNode = json.content?.[0];
+      const text = firstNode?.content?.map((node) => node.text).join("") || "";
+
+      try {
+        if (!transcriptionId) {
+          const { error, data } = await supabase
+            .from("transcripts")
+            .insert([
+              {
+                user_id: session?.user.id,
+                summary: content,
+                title: text.slice(0, 20),
+              },
+            ])
+            .select();
+          if (data) {
+            onSetTranscriptionData(data[0]);
+          }
+          if (error) console.error("Insert error:", error);
+        } else {
+          const { error } = await supabase
+            .from("transcripts")
+            .update({
+              summary: content,
+            })
+            .eq("id", transcriptionId);
+
+          if (error) console.error("Update error:", error);
+        }
+      } catch (err) {
+        console.error("Unexpected error saving draft:", err);
+      } finally {
+        isSaving.current = false;
+      }
+    };
+
+    const handleUpdate = () => {
+      if (saveTimeout.current) clearTimeout(saveTimeout.current);
+      saveTimeout.current = setTimeout(handleSave, 1500);
+    };
+
+    editor.on("update", handleUpdate);
+
+    return () => {
+      editor.off("update", handleUpdate);
+      if (saveTimeout.current) clearTimeout(saveTimeout.current);
+    };
+  }, [editor, transcriptionId, session]);
 
   useEffect(() => {
     if (editor && summary) {

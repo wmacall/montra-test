@@ -12,6 +12,9 @@ interface TranscriptionContextType {
   summary: string | null;
   setSummary: (summary: string | null) => void;
   onSetTranscriptionData: (transcription: TranscriptionResponse) => void;
+  transcriptionId: string | null;
+  setTranscriptionId?: (id: string) => void;
+  onResetTranscriptionData: () => void;
 }
 
 const TranscriptionContext = createContext<
@@ -25,11 +28,21 @@ export const TranscriptionProvider: FC<{ children: ReactNode }> = ({
   const [createdAt, setCreatedAt] = useState<string | null>("");
   const [title, setTitle] = useState<string | null>("");
   const [summary, setSummary] = useState<string | null>("");
+  const [transcriptionId, setTranscriptionId] = useState<string | null>(null);
 
   const onSetTranscriptionData = (transcription: TranscriptionResponse) => {
     setTitle(transcription.title);
     setCreatedAt(transcription.created_at);
     setSummary(transcription.summary);
+    setTranscriptionId(transcription.id);
+  };
+
+  const onResetTranscriptionData = () => {
+    setTitle("");
+    setCreatedAt("");
+    setSummary("");
+    setTranscription("");
+    setTranscriptionId(null);
   };
 
   return (
@@ -44,6 +57,9 @@ export const TranscriptionProvider: FC<{ children: ReactNode }> = ({
         summary,
         setSummary,
         onSetTranscriptionData,
+        transcriptionId,
+        setTranscriptionId,
+        onResetTranscriptionData,
       }}
     >
       {children}

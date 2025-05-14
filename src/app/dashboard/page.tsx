@@ -11,6 +11,7 @@ import {
 import { GroupedTranscriptions, SortDirection, SortField } from "@/types";
 import { ChevronsUpDown, ListFilterIcon, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranscription } from "@/context/TranscriptionContext";
 
 export default function Dashboard() {
   const { push } = useRouter();
@@ -19,8 +20,12 @@ export default function Dashboard() {
   const [transcripts, setTranscripts] = useState<GroupedTranscriptions[]>([]);
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [sortField, setSortField] = useState<SortField>("created_at");
+  const { onResetTranscriptionData } = useTranscription();
 
-  const handleNewProject = () => push("/new-document");
+  const handleNewProject = () => {
+    onResetTranscriptionData();
+    push("/new-document");
+  };
 
   const handleGetUserTranscriptions = useCallback(async () => {
     const data = await onGetUserTranscripts();
