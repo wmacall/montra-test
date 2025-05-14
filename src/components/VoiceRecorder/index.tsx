@@ -31,8 +31,13 @@ export const VoiceRecorder = () => {
   const [canGenerateTranscription, setCanGenerateTranscription] =
     useState(true);
   const { session } = useSession();
-  const { setTranscription, onSetTranscriptionData, setSummary } =
-    useTranscription();
+  const {
+    setTranscription,
+    onSetTranscriptionData,
+    setSummary,
+    summary,
+    transcriptionId,
+  } = useTranscription();
 
   useEffect(() => {
     if (!waveformRef.current) return;
@@ -182,28 +187,42 @@ export const VoiceRecorder = () => {
       });
       const transcriptionData = await transcriptionResponse.json();
       const transcription = transcriptionData.transcript;
-      const { data, error } = await supabase
-        .from("transcripts")
-        .insert([
-          {
-            user_id: session?.user?.id,
+      if (transcriptionId) {
+        const { error } = await supabase
+          .from("transcripts")
+          .update({
             raw_text: transcriptionData.transcript,
-            title:
-              transcription.length > 20
-                ? transcription.slice(0, 20)
-                : transcription,
-          },
-        ])
-        .select();
-      if (data) {
-        setTranscription(transcription);
-        onSetTranscriptionData(data[0]);
-        handleClaudeReformatting(transcription, data[0].id);
-        toast.success("Transcription saved successfully");
+          })
+          .eq("id", transcriptionId);
+        if (error) {
+          return toast.error("Error saving transcription");
+        }
         setCanGenerateTranscription(false);
-      }
-      if (error) {
-        toast.error("Error saving transcription");
+        handleClaudeReformatting(transcription, transcriptionId);
+      } else {
+        const { data, error } = await supabase
+          .from("transcripts")
+          .insert([
+            {
+              user_id: session?.user?.id,
+              raw_text: transcriptionData.transcript,
+              title:
+                transcription.length > 20
+                  ? transcription.slice(0, 20)
+                  : transcription,
+            },
+          ])
+          .select();
+        if (data) {
+          setTranscription(transcription);
+          onSetTranscriptionData(data[0]);
+          handleClaudeReformatting(transcription, data[0].id);
+          toast.success("Transcription saved successfully");
+          setCanGenerateTranscription(false);
+        }
+        if (error) {
+          toast.error("Error saving transcription");
+        }
       }
     } catch (error) {
       console.log("Error generating transcription:", error);
@@ -217,7 +236,11 @@ export const VoiceRecorder = () => {
     try {
       const claudeResponse = await fetch("/api/chat", {
         method: "POST",
-        body: JSON.stringify({ transcription }),
+        body: JSON.stringify({
+          transcription,
+          isUpdate: !!summary,
+          content: summary,
+        }),
       });
       const data = await claudeResponse.json();
       console.log("Claude response:", data.data.text);
