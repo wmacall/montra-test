@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { useEditor, EditorContent, Editor as EditorType } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Underline from "@tiptap/extension-underline";
@@ -120,7 +120,7 @@ const toolbarButtons: {
 ];
 
 export const Editor = () => {
-  const { transcription } = useTranscription();
+  const { transcription, summary } = useTranscription();
   const editor = useEditor({
     extensions: [
       StarterKit,
@@ -144,6 +144,12 @@ export const Editor = () => {
     ],
     content: "",
   });
+
+  useEffect(() => {
+    if (editor && summary) {
+      editor.commands.setContent(summary);
+    }
+  }, [editor, summary]);
 
   if (!editor) return null;
 
