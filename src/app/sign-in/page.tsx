@@ -9,9 +9,11 @@ export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { back, replace } = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePressSubmit = async () => {
     try {
+      setIsLoading(true);
       const { error, data } = await supabase.auth.signInWithPassword({
         email,
         password,
@@ -24,6 +26,8 @@ export default function SignIn() {
       replace("/dashboard");
     } catch {
       console.log("Error in sign in");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -37,6 +41,7 @@ export default function SignIn() {
         setPassword={setPassword}
         onPressNavigate={back}
         onPressSubmit={handlePressSubmit}
+        isLoading={isLoading}
       />
     </div>
   );

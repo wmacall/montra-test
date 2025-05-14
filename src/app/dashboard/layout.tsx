@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <div className="flex h-screen">
       <div className="w-60 bg-gray-100/50 flex flex-col border-r border-gray-300/50">
         <div className="flex flex-row p-4 gap-2 items-center h-14 border-b border-gray-300/50">
-          <Avatar className="h-6 w-6 bg-teal-300 rounded-sm items-center justify-center">
+          <Avatar className="h-6 w-6 bg-[#21CCEE] rounded-sm items-center justify-center">
             <AvatarFallback className="text-white font-medium">
               {session?.user?.email
                 ? session.user.email.charAt(0).toUpperCase()

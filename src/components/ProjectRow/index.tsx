@@ -1,20 +1,34 @@
-import { FC } from "react";
+import { FC, MouseEvent } from "react";
 import { MoreHorizontal, FileText } from "lucide-react";
 import { formatDateMMMMD } from "@/lib/formatDateMMMMD";
 import { useRouter } from "next/navigation";
 import { useTranscription } from "@/context/TranscriptionContext";
 import { TranscriptionResponse } from "@/types";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
-type ProjectRowProps = TranscriptionResponse;
+interface ProjectRowProps extends TranscriptionResponse {
+  onDeleteTranscription: (id: string) => void;
+}
 
 export const ProjectRow: FC<ProjectRowProps> = (transcription) => {
   const { push } = useRouter();
   const { onSetTranscriptionData } = useTranscription();
-  const { title, created_at, updated_at } = transcription;
+  const { title, created_at, updated_at, onDeleteTranscription } =
+    transcription;
 
   const handleClickTranscription = () => {
     onSetTranscriptionData(transcription);
     push("/new-document");
+  };
+
+  const handleDeleteTranscription = (e: MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    onDeleteTranscription(transcription.id);
   };
 
   return (
@@ -46,7 +60,21 @@ export const ProjectRow: FC<ProjectRowProps> = (transcription) => {
           </span>
         </div>
         <div className="flex items-center flex-[0.5] justify-end">
-          <MoreHorizontal className="w-5 h-5 text-gray-500" />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="focus:outline-none">
+                <MoreHorizontal className="w-5 h-5 text-gray-500 hover:text-gray-700 cursor-pointer" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={handleDeleteTranscription}
+                className="text-red-600 focus:text-red-600 focus:bg-red-50"
+              >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

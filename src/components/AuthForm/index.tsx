@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import FormInput from "@/components/FormInput";
-import { Mail, Lock, Eye } from "lucide-react";
+import { Mail, Lock, Eye, LoaderCircle } from "lucide-react";
 
 interface AuthFormProps {
   isSignIn?: boolean;
@@ -19,6 +19,7 @@ interface AuthFormProps {
   setPassword: (password: string) => void;
   onPressNavigate?: () => void;
   onPressSubmit?: () => void;
+  isLoading?: boolean;
 }
 
 export default function AuthForm({
@@ -29,6 +30,7 @@ export default function AuthForm({
   setPassword,
   onPressNavigate,
   onPressSubmit,
+  isLoading = false,
 }: AuthFormProps) {
   return (
     <Card className="w-full max-w-md shadow-sm p-6">
@@ -70,7 +72,11 @@ export default function AuthForm({
             isSignIn ? "mt-3" : "mt-6"
           )}
         >
-          {isSignIn ? "Sign In" : "Sign Up"}
+          {isLoading ? (
+            <LoaderCircle className="h-4 w-4 animate-spin text-white" />
+          ) : (
+            <>{isSignIn ? "Sign In" : "Sign Up"}</>
+          )}
         </Button>
         <div className="flex items-center gap-2 justify-center pt-6">
           <p className="text-gray-600">

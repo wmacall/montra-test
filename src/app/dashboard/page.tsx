@@ -12,6 +12,8 @@ import { GroupedTranscriptions, SortDirection, SortField } from "@/types";
 import { ChevronsUpDown, ListFilterIcon, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranscription } from "@/context/TranscriptionContext";
+import { supabase } from "@/db/supabase";
+import { toast } from "sonner";
 
 export default function Dashboard() {
   const { push } = useRouter();
@@ -38,6 +40,22 @@ export default function Dashboard() {
     setSortDirection(newDirection);
     setSortField(field);
     setTranscripts((prev) => sortTranscriptions(prev, field, newDirection));
+  };
+
+  const handleDeleteTranscription = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("transcripts")
+        .delete()
+        .eq("id", id);
+      if (error) {
+        toast.error("Error deleting transcription");
+        return;
+      }
+      handleGetUserTranscriptions();
+    } catch {
+      console.log("Error deleting transcription");
+    }
   };
 
   useEffect(() => {
@@ -105,7 +123,11 @@ export default function Dashboard() {
             </p>
           </div>
           {transcription.data.map((data) => (
-            <ProjectRow key={data.id} {...data} />
+            <ProjectRow
+              onDeleteTranscription={handleDeleteTranscription}
+              key={data.id}
+              {...data}
+            />
           ))}
         </div>
       ))}

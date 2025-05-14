@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { ChevronLeft, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { useSession } from "@/context/SessionContext";
 
 interface NewDocumentLayoutProps {
   children: ReactNode;
@@ -12,6 +13,7 @@ export default function NewDocumentLayout({
   children,
 }: NewDocumentLayoutProps) {
   const { back } = useRouter();
+  const { session } = useSession();
 
   return (
     <div className="flex flex-col w-full h-screen">
@@ -33,7 +35,11 @@ export default function NewDocumentLayout({
         <div className="flex items-center gap-3">
           <div className="h-8 w-8 items-center justify-center rounded-sm flex bg-white border border-gray-300/50">
             <div className="h-6 w-6 flex justify-center items-center bg-[#21CCEE] rounded-sm">
-              <span className="text-white font-medium">C</span>
+              <span className="text-white font-medium">
+                {session?.user?.email
+                  ? session.user.email[0].toUpperCase()
+                  : "U"}
+              </span>
             </div>
           </div>
           <Button className="h-8 p-0 px-3.5 bg-blue-600 hover:bg-blue-800 cursor-pointer">

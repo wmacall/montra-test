@@ -8,12 +8,14 @@ import { toast } from "sonner";
 export default function Home() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { push } = useRouter();
 
   const handleNavigateToSignIn = () => push("/sign-in");
 
   const handlePressSubmit = async () => {
     try {
+      setIsLoading(true);
       const { error } = await supabase.auth.signUp({
         email,
         password,
@@ -24,6 +26,8 @@ export default function Home() {
       }
     } catch {
       console.log("Error in sign in");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -37,6 +41,7 @@ export default function Home() {
         setPassword={setPassword}
         onPressNavigate={handleNavigateToSignIn}
         onPressSubmit={handlePressSubmit}
+        isLoading={isLoading}
       />
     </div>
   );
