@@ -63,7 +63,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <ChartNoAxesGantt color="#505050" />
           <p className="font-medium">Projects</p>
         </div>
-        <div>{children}</div>
+        <div className="overflow-y-auto">{children}</div>
       </div>
     </div>
   );
