@@ -49,10 +49,13 @@ export default function Dashboard() {
   return (
     <div className="flex flex-col justify-center w-full">
       <div className="flex py-3.5 px-4 justify-between border-b border-gray-300/30">
-        <div className="flex items-center gap-2 bg-gray-50 h-[28-px] rounded-md px-2 cursor-pointer">
+        <div className="flex items-center gap-2 bg-gray-50 h-[28-px] rounded-md px-2 cursor-pointer border border-gray-300/30">
           <ListFilterIcon size={16} color="#505050" />
           <p className="text-sm text-gray-700 font-medium">
-            Sorted by <span className="text-black">Latest Edited</span>
+            Sorted by{" "}
+            <span className="text-black">
+              {sortField === "created_at" ? "Creation Date" : "Latest edited"}
+            </span>
           </p>
         </div>
         <Button
@@ -102,12 +105,7 @@ export default function Dashboard() {
             </p>
           </div>
           {transcription.data.map((data) => (
-            <ProjectRow
-              key={data.id}
-              title={data.title}
-              created_at={data.created_at}
-              updated_at={data.updated_at}
-            />
+            <ProjectRow key={data.id} {...data} />
           ))}
         </div>
       ))}

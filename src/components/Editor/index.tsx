@@ -124,6 +124,7 @@ const toolbarButtons: {
 export const Editor = () => {
   const { transcription, summary, transcriptionId, onSetTranscriptionData } =
     useTranscription();
+
   const editor = useEditor({
     extensions: [
       StarterKit,

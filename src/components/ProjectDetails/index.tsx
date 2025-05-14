@@ -5,11 +5,11 @@ import { useTranscription } from "@/context/TranscriptionContext";
 import { formatDateMMMMD } from "@/lib/formatDateMMMMD";
 
 export const ProjectDetails = () => {
-  const { transcription, createdAt } = useTranscription();
+  const { createdAt, transcriptionId } = useTranscription();
   const { session } = useSession();
   const email = session?.user?.email || null;
 
-  if (!transcription) {
+  if (!transcriptionId) {
     return null;
   }
 

@@ -35,6 +35,9 @@ export const TranscriptionProvider: FC<{ children: ReactNode }> = ({
     setCreatedAt(transcription.created_at);
     setSummary(transcription.summary);
     setTranscriptionId(transcription.id);
+    if (transcription.raw_text) {
+      setTranscription(transcription.raw_text);
+    }
   };
 
   const onResetTranscriptionData = () => {
