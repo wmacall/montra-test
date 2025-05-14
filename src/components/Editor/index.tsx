@@ -39,6 +39,7 @@ import {
 import { useTranscription } from "@/context/TranscriptionContext";
 import { supabase } from "@/db/supabase";
 import { useSession } from "@/context/SessionContext";
+import { Loader } from "../Loader";
 
 const toolbarButtons: {
   icon: ReactNode;
@@ -122,8 +123,13 @@ const toolbarButtons: {
 ];
 
 export const Editor = () => {
-  const { transcription, summary, transcriptionId, onSetTranscriptionData } =
-    useTranscription();
+  const {
+    transcription,
+    summary,
+    transcriptionId,
+    onSetTranscriptionData,
+    isLoading,
+  } = useTranscription();
 
   const editor = useEditor({
     extensions: [
@@ -221,33 +227,40 @@ export const Editor = () => {
 
   return (
     <div className="flex flex-1">
-      <div className="flex flex-col w-full flex-1">
-        <div className="flex flex-col">
-          <div className="flex w-full justify-center gap-1 items-center border-b border-gray-300/50 bg-white h-10">
-            {toolbarButtons.map((button, index) => (
-              <div
-                key={index}
-                onClick={() => button.action(editor)}
-                className="bg-white h-[28px] w-[28px] flex items-center justify-center cursor-pointer hover:bg-gray-100"
-              >
-                {button.icon}
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <div className="flex flex-col w-full flex-1">
+            <div className="flex flex-col">
+              <div className="flex w-full justify-center gap-1 items-center border-b border-gray-300/50 bg-white h-10">
+                {toolbarButtons.map((button, index) => (
+                  <div
+                    key={index}
+                    onClick={() => button.action(editor)}
+                    className="bg-white h-[28px] w-[28px] flex items-center justify-center cursor-pointer hover:bg-gray-100"
+                  >
+                    {button.icon}
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
+            <EditorContent className="py-16 px-6" editor={editor} />
           </div>
-        </div>
-        <EditorContent className="py-16 px-6" editor={editor} />
-      </div>
-      <div className="flex flex-col border-b border-l border-gray-300/50 bg-white w-[268px]">
-        <div className="flex flex-row h-10 border-b border-l border-gray-300/50 bg-white items-center justify-between px-3">
-          <p className="text-black font-medium">
-            {transcription.length > 0 ? "Input" : "New Draft"}
-          </p>
-          <X size={18} color="#707070" />
-        </div>
-        <VoiceRecorder />
-        <Transcript />
-        <ProjectDetails />
-      </div>
+          <div className="flex flex-col border-b border-l border-gray-300/50 bg-white w-[268px]">
+            <div className="flex flex-row h-10 border-b border-l border-gray-300/50 bg-white items-center justify-between px-3">
+              <p className="text-black font-medium">
+                {transcription.length > 0 ? "Input" : "New Draft"}
+              </p>
+              <X size={18} color="#707070" />
+            </div>
+            <VoiceRecorder />
+            <Transcript />
+            <ProjectDetails />
+          </div>
+        </>
+      )}
+
       <div className="flex flex-col bg-gray-100 p-2 border-b border-l border-gray-300/50">
         <div className="h-8 w-8 rounded-sm bg-neutral-200 items-center justify-center flex">
           <Mic size={20} color="#505050" />

@@ -37,6 +37,7 @@ export const VoiceRecorder = () => {
     setSummary,
     summary,
     transcriptionId,
+    setIsLoading,
   } = useTranscription();
 
   useEffect(() => {
@@ -176,6 +177,7 @@ export const VoiceRecorder = () => {
 
   const handleGenerateTranscription = async () => {
     try {
+      setIsLoading(true);
       if (!audioUrlRef.current) return;
       const response = await fetch(audioUrlRef.current);
       const blob = await response.blob();
@@ -195,6 +197,7 @@ export const VoiceRecorder = () => {
           })
           .eq("id", transcriptionId);
         if (error) {
+          setIsLoading(false);
           return toast.error("Error saving transcription");
         }
         setCanGenerateTranscription(false);
@@ -221,10 +224,12 @@ export const VoiceRecorder = () => {
           setCanGenerateTranscription(false);
         }
         if (error) {
+          setIsLoading(false);
           toast.error("Error saving transcription");
         }
       }
     } catch (error) {
+      setIsLoading(false);
       console.log("Error generating transcription:", error);
     }
   };
@@ -254,7 +259,11 @@ export const VoiceRecorder = () => {
       }
       setSummary(data.data.text);
       toast.success("Transcription reformatted successfully");
-    } catch {}
+    } catch {
+      console.log("Error in Claude reformatting");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const resetRecorder = () => {

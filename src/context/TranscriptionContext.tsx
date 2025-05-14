@@ -15,6 +15,8 @@ interface TranscriptionContextType {
   transcriptionId: string | null;
   setTranscriptionId?: (id: string) => void;
   onResetTranscriptionData: () => void;
+  isLoading: boolean;
+  setIsLoading: (isLoading: boolean) => void;
 }
 
 const TranscriptionContext = createContext<
@@ -29,6 +31,7 @@ export const TranscriptionProvider: FC<{ children: ReactNode }> = ({
   const [title, setTitle] = useState<string | null>("");
   const [summary, setSummary] = useState<string | null>("");
   const [transcriptionId, setTranscriptionId] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSetTranscriptionData = (transcription: TranscriptionResponse) => {
     setTitle(transcription.title);
@@ -63,6 +66,8 @@ export const TranscriptionProvider: FC<{ children: ReactNode }> = ({
         transcriptionId,
         setTranscriptionId,
         onResetTranscriptionData,
+        isLoading,
+        setIsLoading,
       }}
     >
       {children}
